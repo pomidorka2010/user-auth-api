@@ -13,6 +13,7 @@ const users = {};
 // Endpoint for user registration
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
+    // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
     users[username] = { password: hashedPassword };
     res.status(201).send('User registered');
@@ -26,6 +27,7 @@ app.post('/login', async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(403).send('Invalid credentials');
     }
+    // Generate a JWT token for the user
     const token = jwt.sign({ username }, 'secretkey', { expiresIn: '1h' });
     res.json({ token });
 });
@@ -33,7 +35,9 @@ app.post('/login', async (req, res) => {
 // Middleware for authenticating JWT tokens
 const authMiddleware = (req, res, next) => {
     const token = req.headers['authorization'];
+    // Check if token is provided
     if (!token) return res.sendStatus(403);
+    // Verify the token
     jwt.verify(token.split(' ')[1], 'secretkey', (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
