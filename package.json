@@ -12,6 +12,9 @@
     "jsonwebtoken": "^8.5.1",
     "body-parser": "^1.19.0"
   },
+  "devDependencies": {
+    "nodemon": "^2.0.0"  // Dev dependency for auto-restarting the server
+  },
   "author": "Your Name",
   "license": "MIT"
 }
